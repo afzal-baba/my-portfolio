@@ -2,8 +2,11 @@ pipeline {
     agent any
     stages {
         stage('Build WAR') {
+            steps { bat 'mvn clean package' }
+        }
+        stage('Trivy Scan') {
             steps {
-                bat 'mvn clean package'
+                bat '"C:\\devops\\tools\\trivy.exe" fs . --scanners vuln --severity HIGH,CRITICAL --format table'
             }
         }
         stage('Deploy to Tomcat') {
